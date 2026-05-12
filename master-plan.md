@@ -158,7 +158,7 @@ Goal: users can sign up, log in, and be redirected correctly.
 
 - [ ] Install `@supabase/supabase-js` and `@supabase/ssr`
 - [ ] Create `lib/supabase/client.ts` (browser client) and `lib/supabase/server.ts` (server component client using cookies)
-- [ ] Add middleware (`middleware.ts`) to protect `/dashboard/**` routes — redirect unauthenticated users to `/login`
+- [ ] Add proxy (`proxy.ts`) to protect `/dashboard/**` routes — redirect unauthenticated users to `/login`
 - [ ] Build pages:
   - `/login` — email + password form (shadcn `Input`, `Button`)
   - `/signup` — same, with display name field

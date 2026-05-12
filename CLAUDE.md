@@ -45,7 +45,7 @@ npm run start         # run without env file (use when env is already set)
 - **`app/`** — Next.js App Router. Route groups: `(auth)` (login/signup), `(dashboard)` (main user area), `admin` (admin-only).
 - **`app/actions/`** — Server Actions for all mutations (auth, searches, admin). No API routes for mutations.
 - **`app/auth/callback/route.ts`** — Supabase OAuth callback handler.
-- **`middleware.ts`** — Auth guard: redirects unauthenticated users away from `/dashboard`, authenticated users away from `/login`/`/signup`.
+- **`proxy.ts`** — Auth guard: redirects unauthenticated users away from `/dashboard`, authenticated users away from `/login`/`/signup`.
 - **`lib/supabase/`** — Three Supabase client variants: `client.ts` (browser), `server.ts` (RSC/Server Actions), `admin.ts` (service-role, for admin routes only).
 
 All mutations go through Server Actions (`'use server'`). Every action re-validates the user session via `supabase.auth.getUser()` before touching data. Row-level security is enforced by always `.eq('user_id', user.id)` on user-owned tables.
