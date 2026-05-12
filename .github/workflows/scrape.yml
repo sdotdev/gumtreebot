@@ -8,6 +8,7 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    environment: main
     timeout-minutes: 4        # fail fast so runs don't overlap
     steps:
       - uses: actions/checkout@v4
