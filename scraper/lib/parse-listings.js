@@ -1,51 +1,60 @@
 import { load } from 'cheerio'
 
-const SEL = {
-  card: 'a[href*="/ad/"]',
-  title: '[data-q="listing-title"], h2.listing-title, .listing-title',
-  price: '[data-q="listing-price"], .listing-price, .price',
-  location: '[data-q="listing-location"], .listing-location, .location',
-}
-
 export function parseListings(html) {
-  const $ = load(html)
-  const listings = []
-  const seen = new Set()
+  try {
+    const $ = load(html)
+    const listings = []
+    const seen = new Set()
 
-  $(SEL.card).each((_, el) => {
-    const $el = $(el)
-    const href = $el.attr('href') || ''
-    const sourceListingId = extractId(href)
-    if (!sourceListingId || seen.has(sourceListingId)) return
-    seen.add(sourceListingId)
+    $('[data-q="search-result"]').each((_, article) => {
+      const $a = $(article).find('[data-q="search-result-anchor"]').first()
+      const href = $a.attr('href') || ''
+      if (!href) return
 
-    const title = $el.find(SEL.title).first().text().trim()
-      || $el.find('h2, h3').first().text().trim()
-    if (!title) return
+      const url = href.startsWith('http') ? href : `https://www.gumtree.com${href}`
+      const sourceListingId = extractId(href)
+      if (!sourceListingId || seen.has(sourceListingId)) return
+      seen.add(sourceListingId)
 
-    listings.push({
-      source: 'gumtree',
-      source_listing_id: sourceListingId,
-      title,
-      price: extractPrice($el.find(SEL.price).first().text()),
-      location_text: $el.find(SEL.location).first().text().trim() || null,
-      url: href.startsWith('http') ? href : `https://www.gumtree.com${href}`,
-      posted_at: null,
-      raw_json: { snippet: $el.text().slice(0, 500) },
+      const title = $(article).find('[data-q="tile-title"]').first().text().trim()
+      if (!title) return
+
+      const priceText = $(article).find('[data-q="tile-price"]').first().text().trim()
+      const locationText = $(article).find('[data-q="tile-location"]').first().text().trim() || null
+      const $desc = $(article).find('[data-q="tile-description"]').first().clone()
+      $desc.find('style, script').remove()
+      const description = $desc.text().trim() || null
+
+      listings.push({
+        source: 'gumtree',
+        source_listing_id: sourceListingId,
+        title,
+        price: extractPrice(priceText),
+        location_text: locationText,
+        url,
+        posted_at: null,
+        raw_json: {
+          description,
+          price_text: priceText || null,
+        },
+      })
     })
-  })
 
-  return listings
+    return listings
+  } catch (err) {
+    console.error('Error parsing listings:', err.message, err.stack)
+    // Return empty array to avoid breaking the pipeline
+    return []
+  }
 }
 
 function extractId(url) {
-  if (!url) return null
   const m = url.match(/\/(\d{6,})(?:[/?#]|$)/)
   return m ? m[1] : null
 }
 
 function extractPrice(text) {
   if (!text) return null
-  const m = text.replace(/[,£$€]/g, '').match(/[\d.]+/)
+  const m = text.replace(/[,£$€\s]/g, '').match(/\d+(\.\d+)?/)
   return m ? parseFloat(m[0]) : null
 }

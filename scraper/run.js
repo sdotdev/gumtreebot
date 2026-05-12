@@ -57,7 +57,7 @@ async function run() {
             .select('id, notification_status')
             .maybeSingle()
 
-          if (matchErr) { console.error('Match upsert error:', matchErr.message); continue }
+           if (matchErr) { console.error('Match upsert error:', matchErr.message, matchErr.stack); continue }
           if (!match || match.notification_status !== 'pending') continue
 
           try {

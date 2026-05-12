@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "software-ui-ux-design": {
+      "source": "vasilyu1983/ai-agents-public",
+      "sourceType": "github",
+      "skillPath": "frameworks/shared-skills/skills/software-ui-ux-design/SKILL.md",
+      "computedHash": "3ac6ab99df4a0569751f39d4efd152a2da94cc2a31e555e08efb553ecfc5d8af"
+    }
+  }
+}

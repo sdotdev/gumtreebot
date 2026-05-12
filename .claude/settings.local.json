@@ -20,7 +20,19 @@
       "Bash(node --input-type=module -e \"import { createClient } from '@supabase/supabase-js'; import { load } from 'cheerio'; import { Resend } from 'resend'; console.log\\('All imports OK'\\)\")",
       "Bash(npx tsc *)",
       "Bash(grep -v \"^$\")",
-      "mcp__claude_ai_Supabase__get_logs"
+      "mcp__claude_ai_Supabase__get_logs",
+      "PowerShell(Head *)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "Bash(node -e ' *)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(node --env-file=.env.local run.js)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/dashboard)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/dashboard/searches/new)"
     ]
   }
 }
