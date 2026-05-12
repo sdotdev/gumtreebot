@@ -1,0 +1,15 @@
+# scraper
+scraper/node_modules/
+
+# environment
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.idea/
+.vscode/
