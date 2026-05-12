@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gumtree Deal Finder",
-  description: "Get emailed the moment a new Gumtree listing matches your search.",
+  title: "Gumbotree",
+  description: "Get emailed the moment a new listing matches your search.",
 };
 
 export default function RootLayout({

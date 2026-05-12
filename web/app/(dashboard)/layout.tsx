@@ -14,7 +14,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="font-semibold text-foreground">
-              Gumtree Deals
+              Gumbotree
             </Link>
             <Link href="/alerts" className="text-sm text-muted-foreground hover:text-foreground">
               Alerts

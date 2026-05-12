@@ -6,7 +6,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 text-foreground">
       <div className="flex max-w-md flex-col items-center gap-6 text-center">
         <h1 className="text-4xl font-bold tracking-tight">
-          Never miss a Gumtree deal
+          Never miss a deal
         </h1>
         <p className="text-lg text-muted-foreground">
           Get emailed the moment a new listing matches your search.

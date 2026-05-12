@@ -8,7 +8,7 @@ export async function notifyMatch({ match, listing, search, userEmail }) {
   const priceStr = listing.price != null ? `£${listing.price}` : 'Price not listed'
 
   const { error: emailError } = await resend.emails.send({
-    from: `Gumtree Alerts <${FROM_EMAIL}>`,
+    from: `Gumbotree <${FROM_EMAIL}>`,
     to: userEmail,
     subject: `New match: ${listing.title} — ${priceStr}`,
     text: [
@@ -21,7 +21,7 @@ export async function notifyMatch({ match, listing, search, userEmail }) {
       `View listing: ${listing.url}`,
       '',
       '---',
-      'You are receiving this because you have an active Gumtree deal alert.',
+      'You are receiving this because you have an active Gumbotree alert.',
     ].join('\n'),
   })
 

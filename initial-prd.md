@@ -1,4 +1,4 @@
-# Technical PRD: Gumtree Deal Finder
+# Technical PRD: Gumbotree
 
 ## 1. Overview
 

@@ -1,4 +1,4 @@
-# Master Plan — Gumtree Deal Finder MVP
+# Master Plan — Gumbotree
 
 **Stack:** Next.js 16 (App Router) · Supabase (Auth + Postgres + RLS) · Tailwind 4 + shadcn · GitHub Actions (scraper) · Resend (email)  
 **Deployment:** Vercel (web) · GitHub Actions (scraper cron)  
