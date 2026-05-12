@@ -15,7 +15,12 @@
       "mcp__claude_ai_Supabase__apply_migration",
       "mcp__claude_ai_Supabase__list_tables",
       "mcp__claude_ai_Supabase__list_migrations",
-      "Bash(Get-ChildItem *)"
+      "Bash(Get-ChildItem *)",
+      "Bash(node --check run.js)",
+      "Bash(node --input-type=module -e \"import { createClient } from '@supabase/supabase-js'; import { load } from 'cheerio'; import { Resend } from 'resend'; console.log\\('All imports OK'\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(grep -v \"^$\")",
+      "mcp__claude_ai_Supabase__get_logs"
     ]
   }
 }

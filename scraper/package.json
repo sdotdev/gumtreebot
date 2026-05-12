@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "start": "node run.js"
+    "start": "node run.js",
+    "start:local": "node --env-file=.env.local run.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2",
