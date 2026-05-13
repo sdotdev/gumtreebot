@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { AlertsFilter } from '@/components/alerts-filter'
 import { formatDistanceToNow } from 'date-fns'
@@ -103,14 +104,15 @@ export default async function AlertsPage({
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       {listing ? (
-                        <a
-                          href={listing.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-semibold text-foreground hover:underline"
-                        >
-                          {listing.title}
-                        </a>
+                        <Button asChild variant="link" size="sm" className="h-auto p-0 text-base font-semibold justify-start">
+                          <a
+                            href={listing.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {listing.title}
+                          </a>
+                        </Button>
                       ) : (
                         <span className="font-semibold text-muted-foreground">[Listing unavailable]</span>
                       )}
@@ -143,12 +145,11 @@ export default async function AlertsPage({
                     <p className="text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(match.matched_at), { addSuffix: true })}
                     </p>
-                    <Link
-                      href={`/alerts/${match.id}`}
-                      className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
-                    >
-                      Details
-                    </Link>
+                    <Button asChild variant="ghost" size="sm" className="h-auto px-2 py-0 text-xs">
+                      <Link href={`/alerts/${match.id}`}>
+                        Details
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -161,12 +162,11 @@ export default async function AlertsPage({
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
           {page > 1 ? (
-            <Link
-              href={`/alerts?page=${page - 1}${searchId ? `&search_id=${searchId}` : ''}`}
-              className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
-            >
-              ← Previous
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/alerts?page=${page - 1}${searchId ? `&search_id=${searchId}` : ''}`}>
+                ← Previous
+              </Link>
+            </Button>
           ) : (
             <span />
           )}
@@ -174,12 +174,11 @@ export default async function AlertsPage({
             Page {page} of {totalPages}
           </span>
           {page < totalPages ? (
-            <Link
-              href={`/alerts?page=${page + 1}${searchId ? `&search_id=${searchId}` : ''}`}
-              className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
-            >
-              Next →
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/alerts?page=${page + 1}${searchId ? `&search_id=${searchId}` : ''}`}>
+                Next →
+              </Link>
+            </Button>
           ) : (
             <span />
           )}

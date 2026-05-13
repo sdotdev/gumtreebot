@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { format } from 'date-fns'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
 
 type ScrapeRun = {
   id: string
@@ -76,12 +78,11 @@ export default async function AdminRunsPage() {
                   <TableCell>{duration}</TableCell>
                   <TableCell>{run.listings_found ?? 0}</TableCell>
                   <TableCell>
-                    <a
-                      href={`/admin/runs/${run.id}`}
-                      className="text-sm text-muted-foreground hover:text-foreground underline"
-                    >
-                      View
-                    </a>
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href={`/admin/runs/${run.id}`}>
+                        View
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               )

@@ -1,5 +1,6 @@
 'use client'
 import { useState, useTransition } from 'react'
+import { Button } from '@/components/ui/button'
 import { parseHtmlAction } from '@/app/actions/admin'
 
 export default function ParserPage() {
@@ -29,13 +30,12 @@ export default function ParserPage() {
             onChange={(e) => setHtml(e.target.value)}
             placeholder="Paste Gumtree search results HTML here..."
           />
-          <button
+          <Button
             onClick={handleParse}
             disabled={isPending || !html}
-            className="px-4 py-2 bg-foreground text-background rounded-md text-sm disabled:opacity-50"
           >
             {isPending ? 'Parsing...' : 'Parse listings'}
-          </button>
+          </Button>
         </div>
         <div className="flex flex-col gap-3">
           <label className="text-sm font-medium">

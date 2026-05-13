@@ -13,12 +13,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="font-semibold text-foreground">
-              Gumbotree
-            </Link>
-            <Link href="/alerts" className="text-sm text-muted-foreground hover:text-foreground">
-              Alerts
-            </Link>
+            <Button asChild variant="ghost" size="sm" className="font-semibold">
+              <Link href="/dashboard">
+                Gumbotree
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/alerts">
+                Alerts
+              </Link>
+            </Button>
           </div>
           <div className="flex items-center gap-3">
             {user && (
