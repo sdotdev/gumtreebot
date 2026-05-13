@@ -53,9 +53,11 @@ export default async function SignupPage({
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Already have an account?{' '}
-            <Link href="/login" className="font-medium text-foreground underline-offset-4 hover:underline">
-              Log in
-            </Link>
+            <Button asChild variant="link" className="h-auto p-0">
+              <Link href="/login">
+                Log in
+              </Link>
+            </Button>
           </p>
         </CardContent>
       </Card>

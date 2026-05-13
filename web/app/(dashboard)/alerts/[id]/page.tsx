@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
@@ -46,12 +47,11 @@ export default async function AlertDetailPage({
   return (
     <div className="space-y-6">
       {/* Back link */}
-      <Link
-        href="/alerts"
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-      >
-        ← Back to alerts
-      </Link>
+      <Button asChild variant="ghost" size="sm">
+        <Link href="/alerts">
+          ← Back to alerts
+        </Link>
+      </Button>
 
       {/* Title */}
       <h1 className="text-2xl font-bold">
@@ -91,14 +91,16 @@ export default async function AlertDetailPage({
               </dt>
               <dd className="mt-1 text-sm">
                 {listing?.url ? (
-                  <a
-                    href={listing.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-foreground underline underline-offset-2 hover:text-muted-foreground break-all"
-                  >
-                    {listing.url}
-                  </a>
+                  <Button asChild variant="link" size="sm" className="h-auto p-0 justify-start">
+                    <a
+                      href={listing.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="break-all"
+                    >
+                      {listing.url}
+                    </a>
+                  </Button>
                 ) : (
                   '—'
                 )}

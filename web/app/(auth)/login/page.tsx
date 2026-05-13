@@ -47,9 +47,11 @@ export default async function LoginPage({
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="font-medium text-foreground underline-offset-4 hover:underline">
-              Sign up
-            </Link>
+            <Button asChild variant="link" className="h-auto p-0">
+              <Link href="/signup">
+                Sign up
+              </Link>
+            </Button>
           </p>
         </CardContent>
       </Card>

@@ -4,7 +4,7 @@ import { fetchPage } from './lib/fetch-page.js'
 import { parseListings } from './lib/parse-listings.js'
 import { dedupeAndStore } from './lib/dedupe.js'
 import { matchesSearch } from './lib/match.js'
-import { notifyMatch } from './lib/notify.js'
+import { notifyMatches } from './lib/notify.js'
 import { startRun, finishRun, failRun } from './lib/log-run.js'
 import { supabase } from './lib/supabase.js'
 
@@ -43,7 +43,7 @@ async function run() {
       const newListings = await dedupeAndStore(parsed)
       console.log(`  ${newListings.length} new listing(s)`)
 
-      let matchCount = 0
+      const searchMatches = new Map()
       for (const listing of newListings) {
         for (const search of group) {
           if (!matchesSearch(listing, search)) continue
@@ -60,13 +60,21 @@ async function run() {
            if (matchErr) { console.error('Match upsert error:', matchErr.message, matchErr.stack); continue }
           if (!match || match.notification_status !== 'pending') continue
 
-          try {
-            const userEmail = await getUserEmail(search.user_id)
-            const sent = await notifyMatch({ match, listing, search, userEmail })
-            if (sent) matchCount++
-          } catch (notifyErr) {
-            console.error('Notify error:', notifyErr.message)
+          if (!searchMatches.has(search.id)) {
+            searchMatches.set(search.id, { search, matches: [] })
           }
+          searchMatches.get(search.id).matches.push({ match, listing })
+        }
+      }
+
+      let matchCount = 0
+      for (const { search, matches } of searchMatches.values()) {
+        try {
+          const userEmail = await getUserEmail(search.user_id)
+          const { error, count } = await notifyMatches({ matches, search, userEmail })
+          if (!error) matchCount += count
+        } catch (notifyErr) {
+          console.error('Notify error:', notifyErr.message)
         }
       }
 

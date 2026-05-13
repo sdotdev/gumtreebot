@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
 interface Search {
@@ -44,12 +45,11 @@ export function AlertsFilter({ searches, activeSearchId }: Props) {
         ))}
       </select>
       {activeSearchId && (
-        <Link
-          href="/alerts"
-          className="text-sm text-muted-foreground underline underline-offset-2"
-        >
-          Clear
-        </Link>
+        <Button asChild variant="ghost" size="sm">
+          <Link href="/alerts">
+            Clear
+          </Link>
+        </Button>
       )}
     </div>
   )
