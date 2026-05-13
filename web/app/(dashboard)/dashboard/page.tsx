@@ -33,9 +33,17 @@ export default async function DashboardPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">My Searches</h1>
-        <Button asChild>
-          <Link href="/dashboard/searches/new">New search</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link href="/dashboard/runs">Activity</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/dashboard/settings">Settings</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/dashboard/searches/new">New search</Link>
+          </Button>
+        </div>
       </div>
 
       {list.length === 0 ? (

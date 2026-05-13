@@ -6,6 +6,7 @@ import { dedupeAndStore } from './lib/dedupe.js'
 import { matchesSearch } from './lib/match.js'
 import { notifyMatches } from './lib/notify.js'
 import { startRun, finishRun, failRun } from './lib/log-run.js'
+import { cleanupExpiredListings } from './lib/cleanup-expired.js'
 import { supabase } from './lib/supabase.js'
 
 async function getUserEmail(userId) {
@@ -71,7 +72,7 @@ async function run() {
       for (const { search, matches } of searchMatches.values()) {
         try {
           const userEmail = await getUserEmail(search.user_id)
-          const { error, count } = await notifyMatches({ matches, search, userEmail })
+          const { error, count } = await notifyMatches({ matches, search, userEmail, userId: search.user_id })
           if (!error) matchCount += count
         } catch (notifyErr) {
           console.error('Notify error:', notifyErr.message)
@@ -84,6 +85,13 @@ async function run() {
       console.error(`  Run failed: ${err.message}`)
       await failRun(runId, err.message)
     }
+  }
+
+  // Cleanup expired listings (run once per full scrape cycle)
+  try {
+    await cleanupExpiredListings(30)
+  } catch (cleanupErr) {
+    console.error('Cleanup failed:', cleanupErr.message)
   }
 
   console.log(`[${new Date().toISOString()}] Scrape job finished`)
