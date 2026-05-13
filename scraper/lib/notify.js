@@ -3,7 +3,7 @@ import { supabase } from './supabase.js'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM_EMAIL = process.env.FROM_EMAIL ?? 'alerts@yourdomain.com'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://gumbotree.app'
+const APP_URL = 'https://gumbotree.vercel.app'
 
 function formatListing(listing) {
   const priceStr = listing.price != null ? `£${listing.price}` : 'Price not listed'
