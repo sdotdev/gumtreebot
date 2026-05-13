@@ -69,9 +69,14 @@ node test-supabase.js  # Test Supabase connection
 |---|---|---|---|
 | `client.ts` | `createBrowserClient` | Anon | Browser components (use sparingly) |
 | `server.ts` | `createServerClient` | Anon | RSC, Server Actions (preferred) |
-| `admin.ts` | `createClient` | Service role | Admin pages only (`/admin/*`) |
+| `admin.ts` | `createClient` | Service role | Admin pages (`/admin/*`), public API routes (`/api/*` with token verification) |
 
 All clients use `cookieEncoding: 'base64url'` (non-default `@supabase/ssr` setting).
+
+**Admin client usage:** Service-role key allows bypassing auth checks. Use only for:
+- Admin-protected routes (email verification)
+- Public API endpoints that verify tokens before mutating (e.g., unsubscribe)
+- Scraper operations that need full DB access
 
 **UI & Styling:**
 - Components in `components/` — shadcn/ui components + custom
@@ -82,14 +87,15 @@ All clients use `cookieEncoding: 'base64url'` (non-default `@supabase/ssr` setti
 
 **Pipeline** (`run.js`):
 ```
-1. fetch-searches.js    — load all active searches from Supabase
-2. build-url.js         — construct Gumtree search URL from params
-3. fetch-page.js        — HTTP fetch Gumtree page (via cheerio)
-4. parse-listings.js    — extract listings from HTML
-5. dedupe.js            — upsert into DB, return only new ones
-6. match.js             — filter new listings by include/exclude keywords + price range
-7. notify.js            — email matches via Resend
-8. log-run.js           — write run status/stats to scrape_runs table
+1. fetch-searches.js      — load all active searches from Supabase
+2. build-url.js           — construct Gumtree search URL from params
+3. fetch-page.js          — HTTP fetch Gumtree page (via cheerio)
+4. parse-listings.js      — extract listings from HTML
+5. dedupe.js              — upsert into DB, return only new ones
+6. match.js               — filter new listings by include/exclude keywords + price range
+7. notify.js              — email matches via Resend (checks user_settings.email_enabled)
+8. log-run.js             — write run status/stats to scrape_runs table
+9. cleanup-expired.js     — remove listings older than 30 days (runs once per cycle)
 ```
 
 **Optimizations:**
@@ -154,6 +160,11 @@ All clients use `cookieEncoding: 'base64url'` (non-default `@supabase/ssr` setti
 - `display_name` text
 - `created_at` timestamp
 
+**`user_settings`** — User notification preferences
+- `user_id` uuid (pk, fk → profiles)
+- `email_enabled` boolean (default true, controls email notifications)
+- `updated_at` timestamp
+
 ---
 
 ## Server Action Pattern
@@ -210,6 +221,20 @@ Email must match `ADMIN_EMAIL` env var exactly. No database roles — purely ema
 
 ---
 
+## API Routes & Public Endpoints
+
+**`/api/unsubscribe`** — Unsubscribe from email notifications
+
+- **Method:** GET with `token` query parameter
+- **Auth:** Token-based (base64-encoded `user_id:email`)
+- **Action:** Disables email notifications by upserting `user_settings` with `email_enabled: false`
+- **Client:** Uses `admin.ts` (service role) for auth-free token verification
+- **Response:** Redirects to login with success/error message
+
+Pattern: Public routes that modify user data should use admin client for token verification, then validate user identity before updating `user_settings`.
+
+---
+
 ## Environment Variables
 
 **`web/.env.local`**
@@ -254,6 +279,10 @@ FROM_EMAIL=noreply@example.com
 
 10. **Deduplication by `source_listing_id`** — Listings are deduplicated across scraper runs via this field (Gumtree's internal listing ID).
 
+11. **Listing lifecycle & cleanup** — Listings are automatically deleted if `first_seen_at` is older than 30 days. Cleanup runs once per scrape cycle. Always verify `last_seen_at` is current before matching.
+
+12. **Email notification gating** — Scraper checks `user_settings.email_enabled` before sending notifications. Users can unsubscribe via email link or disable in settings. Always upsert `user_settings` with explicit `email_enabled` value when managing preferences.
+
 ---
 
 ## Development Workflow
@@ -297,6 +326,12 @@ Before schema changes: Use Supabase Studio UI or migrations. Verify RLS policies
 2. Add auth check in layout.tsx (email vs `ADMIN_EMAIL`)
 3. Use `admin.ts` client (service-role key)
 4. Remember: admin is email-gated only, no role-based access control
+
+**Manage email notification preferences:**
+1. Check `user_settings.email_enabled` in `scraper/lib/notify.js` before sending emails
+2. Provide unsubscribe links in emails (encoded token: base64(`user_id:email`))
+3. Unsubscribe endpoint (`/api/unsubscribe`) sets `email_enabled: false` in `user_settings`
+4. Users can re-enable notifications via dashboard settings (upsert with `email_enabled: true`)
 
 ---
 

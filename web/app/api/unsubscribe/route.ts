@@ -21,8 +21,8 @@ export async function GET(request: Request) {
     }
 
     // Verify the email matches the user
-    const { data: user, error: userError } = await supabase.auth.admin.getUserById(userId)
-    if (userError || !user || user.user_metadata?.email !== email) {
+    const { data: { user }, error: userError } = await supabase.auth.admin.getUserById(userId)
+    if (userError || !user || user.email !== email) {
       redirect('/login?error=Invalid unsubscribe link')
     }
 
